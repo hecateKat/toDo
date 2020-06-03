@@ -6,7 +6,6 @@ public class HelloService {
     static final String FALLBACK_NAME = "world";
 
     String prepareGreeting(String name){
-        return Optional.ofNullable(name).orElse(FALLBACK_NAME) + "!";
+        return "Hello " + Optional.ofNullable(name).orElse(FALLBACK_NAME) + "!";
     }
-
 }
