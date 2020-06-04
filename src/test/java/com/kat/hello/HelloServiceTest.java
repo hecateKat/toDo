@@ -1,5 +1,8 @@
-package com.kat;
+package com.kat.hello;
 
+import com.kat.hello.HelloService;
+import com.kat.lang.Lang;
+import com.kat.lang.LangRepository;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -18,7 +21,7 @@ public class HelloServiceTest {
         var helloService = new HelloService(mockRepository);
 
         //when
-        var result = helloService.prepareGreeting(null, "-1");
+        var result = helloService.prepareGreeting(null, -1);
 
         //then
         assertEquals(WELCOME + " " + HelloService.FALLBACK_NAME + "!", result);
@@ -38,57 +41,28 @@ public class HelloServiceTest {
     }
 
     @Test
-    public void testShouldReturnTrueWhenMethod_returnsGreeting_returnsTextLangWithFallbackIdLang(){
-        //given
-        var mockRepository = fallbackLangIdRepository();
-        var helloService = new HelloService(mockRepository);
-
-        //when
-        var result = helloService.prepareGreeting(null, "abc");
-
-        //then
-        assertEquals(FALLBACK_ID_WELCOME + " " + HelloService.FALLBACK_NAME + "!", result);
-    }
-
-    @Test
     public void test_prepareGreeting_nonExistingLang_returnsGreetingWithFallbackLang(){
         //given
         var mockRepository = new LangRepository(){
             @Override
-            Optional<Lang> findById(Long id) {
+            public Optional<Lang> findById(Integer id) {
                 return Optional.empty();
             }
         };
         var helloService = new HelloService(mockRepository);
 
         //when
-        var result = helloService.prepareGreeting(null, "-1");
+        var result = helloService.prepareGreeting(null, -1);
 
         //then
         assertEquals(HelloService.FALLBACK_LANG.getWelcomeMsg() + " " + HelloService.FALLBACK_NAME + "!", result);
 
     }
 
-
-    @Test
-    public void testShouldReturnTrueWhenMethod_returnsGreeting_returnsWithName(){
-        //given
-        var helloService = new HelloService();
-        String name = "test";
-
-
-        //when
-        var result = helloService.prepareGreeting(name, "-1");
-
-        //then
-        assertEquals(WELCOME + " " + name + "!", result);
-    }
-
-
     private LangRepository alwaysReturningHelloRepository(String WELCOME) {
         return new LangRepository(){
             @Override
-            Optional<Lang> findById(Long id) {
+            public Optional<Lang> findById(Integer id) {
                 return Optional.of(new Lang(null, WELCOME, null));
             }
         };
@@ -97,7 +71,7 @@ public class HelloServiceTest {
     private LangRepository fallbackLangIdRepository() {
         return new LangRepository(){
             @Override
-            Optional<Lang> findById(Long id) {
+            public Optional<Lang> findById(Integer id) {
                 if (id.equals(HelloService.FALLBACK_LANG.getId())){
                     return Optional.of(new Lang(null, FALLBACK_ID_WELCOME, null));
                 }

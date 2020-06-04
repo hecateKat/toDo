@@ -1,18 +1,34 @@
-package com.kat;
+package com.kat.lang;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "LANGUAGES")
 public class Lang {
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "WELCOME_MSG")
     private String welcomeMsg;
+    @Column(name = "CODE")
     private String langCode;
 
-    public Lang(Long id, String welcomeMsg, String langCode) {
+    public Lang(Integer id, String welcomeMsg, String langCode) {
         this.id = id;
         this.welcomeMsg = welcomeMsg;
         this.langCode = langCode;
     }
 
-    public Long getId() {
+    /**
+     * Hibernate (JPA) needs it.
+     */
+    @SuppressWarnings("unused")
+    public Lang() {
+    }
+
+    public Integer getId() {
         return id;
     }
 

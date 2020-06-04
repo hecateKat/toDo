@@ -1,5 +1,7 @@
-package com.kat;
+package com.kat.hello;
 
+import com.kat.lang.Lang;
+import com.kat.lang.LangRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +9,7 @@ import java.util.Optional;
 
 public class HelloService {
     static final String FALLBACK_NAME = "world";
-    static final Lang FALLBACK_LANG = new Lang(1L, "Hello", "EN");
+    static final Lang FALLBACK_LANG = new Lang(1, "Hello", "EN");
     private final Logger logger = LoggerFactory.getLogger(HelloService.class);
 
     private LangRepository langRepository;
@@ -20,15 +22,9 @@ public class HelloService {
         this.langRepository = langRepository;
     }
 
-    String prepareGreeting(String name, String lang){
-        Long langId;
-        try {
-            langId = Optional.ofNullable(lang).map(Long::valueOf).orElse(FALLBACK_LANG.getId());
-        } catch (NumberFormatException e){
-            logger.warn("Non-numeric language id used: " + lang);
-            langId = FALLBACK_LANG.getId();
-        }
-        var welcomeMsg = langRepository.findById(langId).orElse(FALLBACK_LANG).getWelcomeMsg();
+    public String prepareGreeting(String name, Integer lang){
+        Integer langId = Optional.ofNullable(lang).orElse(FALLBACK_LANG.getId());
+              var welcomeMsg = langRepository.findById(langId).orElse(FALLBACK_LANG).getWelcomeMsg();
         String nameToWelcome = Optional.ofNullable(name).orElse(FALLBACK_NAME);
         return welcomeMsg + " " + nameToWelcome + "!";
     }
